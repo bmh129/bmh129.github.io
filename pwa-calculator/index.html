@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PWA Calculator</title>
+  <link rel="manifest" href="/manifest.json">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .display {
+      background-color: #fff;
+      padding: 20px;
+      font-size: 32px;
+      text-align: right;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .button {
+      padding: 20px;
+      font-size: 24px;
+      background-color: #eee;
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .button:last-child {
+      background-color: #f90;
+      color: #fff;
+    }
+
+    .button:nth-child(4n) {
+      border-right: none;
+    }
+
+    .button:nth-last-child(-n+4) {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="display">0</div>
+    <div class="buttons">
+      <div class="button" data-value="7">7</div>
+      <div class="button" data-value="8">8</div>
+      <div class="button" data-value="9">9</div>
+      <div class="button" data-value="/">/</div>
+      <div class="button" data-value="4">4</div>
+      <div class="button" data-value="5">5</div>
+      <div class="button" data-value="6">6</div>
+      <div class="button" data-value="*">*</div>
+      <div class="button" data-value="1">1</div>
+      <div class="button" data-value="2">2</div>
+      <div class="button" data-value="3">3</div>
+      <div class="button" data-value="-">-</div>
+      <div class="button" data-value=".">.</div>
+      <div class="button" data-value="0">0</div>
+      <div class="button" data-value="+">+</div>
+      <div class="button" data-value="=">=</div>
+    </div>
+  </div>
+
+  <script>
+
+    // Get the display element
+    const display = document.querySelector(".display");
+
+    // Get all the buttons
+    const buttons = document.querySelectorAll(".button");
+
+    // Add a click event listener to each button
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        // Get the button value
+        const value = button.dataset.value;
+
+        // If the value is "=", evaluate the expression and update the display
+        if (value === "=") {
+          display.textContent = eval(display.textContent);
+        }
+        // If the value is "C", clear the display
+        else if (value === "C") {
+          display.textContent = "0";
+        }
+        // Otherwise, append the value to the display
+        else {
+          if (display.textContent === "0") {
+            display.textContent = value;
+          } else {
+            display.textContent += value;
+          }
+        }
+        
+      });
+    });
+
+    // Register the service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js")
+          .then(registration => console.log("Service worker registered"))
+          .catch(error => console.log("Service worker registration failed"));
+      });
+    }
+    
+  </script>
+
+</body>
+</html>
